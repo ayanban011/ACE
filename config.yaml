@@ -1,0 +1,64 @@
+# ===============================
+# PACS Domain Generalization Config
+# ===============================
+
+# -------- Experiment --------
+experiment_name: pacs_dg_v1
+method: IRM                # ERM | IRM | DANN | MIXSTYLE | CORAL
+seed: 42
+
+# -------- Data --------
+data_root: ./PACS
+domains:
+  - photo
+  - art_painting
+  - cartoon
+  - sketch
+
+input_size: 224
+batch_size: 32
+num_workers: 4
+
+# -------- Training --------
+epochs: 20
+lr: 0.0001
+weight_decay: 0.0005
+optimizer: adam           # adam | sgd
+
+# -------- Scheduler --------
+scheduler: step           # none | step | cosine
+step_size: 10
+gamma: 0.1
+
+# -------- IRM --------
+lambda_irm: 1.0
+irm_anneal_iters: 500     # warmup before applying full penalty
+
+# -------- DANN --------
+lambda_dann: 1.0
+grl_schedule: sigmoid     # constant | linear | sigmoid
+
+# -------- CORAL --------
+lambda_coral: 1.0
+
+# -------- MixStyle --------
+mixstyle_p: 0.5           # probability of applying
+mixstyle_alpha: 0.1
+
+# -------- Model --------
+backbone: vgg19
+pretrained: true
+freeze_backbone: false
+
+# -------- Logging --------
+log_dir: ./logs
+save_dir: ./checkpoints
+log_interval: 10
+
+# -------- Evaluation --------
+eval_interval: 1
+save_best: true
+
+# -------- Reproducibility --------
+deterministic: true
+cudnn_benchmark: false
