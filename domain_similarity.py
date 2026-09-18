@@ -1,9 +1,5 @@
 """
-Domain Similarity Computation for PACS-style datasets
------------------------------------------------------
 Metrics: FID, CKA (sample-matched), EMD
-Visualization: heatmaps via seaborn
-Requirements: torch, torchvision, numpy, scipy, pot, sklearn, tqdm, seaborn, matplotlib
 """
 
 import torch
