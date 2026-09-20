@@ -1,25 +1,4 @@
 """
-Circuit Alignment Predicts Out-of-Distribution Generalization
-=============================================================
-Full experimental pipeline on the PACS dataset.
-
-Assumes the following are already available (provided by user):
-  - ACE circuit extraction code
-  - Graph kernel computations (RWK, TK, OT)
-  - CAS computation from similarity matrix S
-
-This file implements:
-  1. CAS-H computation from similarity matrix S
-  2. Dataset & dataloader setup (PACS)
-  3. Model pool construction (4 archs × 4 objectives × 3 regularizations = 48)
-  4. Adapter insertion & training
-  5. Circuit extraction wrapper (calls ACE)
-  6. Cross-domain CAS / CAS-H aggregation
-  7. Baseline metric computation (CKA, SVCCA, RSA, MMD, flatness, etc.)
-  8. Rank correlation evaluation & statistical tests
-  9. Ablation studies
-  10. Visualization (scatter plots, class vulnerability tables)
-
 Usage:
     python run_experiments.py --data_root /path/to/PACS --output_dir ./results
 """
