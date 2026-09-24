@@ -75,13 +75,7 @@ class MobileNetV2_Adapter(nn.Module):
         for p in base.features.parameters():
             p.requires_grad = False
 
-        self.features = base.features  # Sequential of inverted residual blocks
-
-        # We insert adapters after deeper blocks where representation is semantic
-        # Good tracing points (empirically stable):
-        # 6  -> 32 channels
-        # 13 -> 96 channels
-        # 17 -> 320 channels (last conv block)
+        self.features = base.features
 
         self.adapter_layers = ["6", "13", "17"]
 
@@ -192,16 +186,6 @@ class AdapterCircuitTracer:
         for h in hooks: h.remove()
         return out, cache
 
-    #def patch(self, x, layer_name, ch):
-    #    def hook(m,i,o):
-    #        o = o.clone()
-    #        o[:, ch] = 0
-    #        return o
-
-    #    handle = self.model.adapters[layer_name].register_forward_hook(hook)
-    #    out = self.model(x)
-    #    handle.remove()
-    #    return out
     def patch_and_run(self, x, layer_name, ch):
         cache = {}
         hooks = []
@@ -270,18 +254,7 @@ class AdapterCircuitTracer:
                         circuits[cls].add_node(node, importance=eff, layer=layer)
 
                 layers = list(cache.keys())
-                #for l1, l2 in zip(layers[:-1], layers[1:]):
-                #    for c1,_ in layer_topk[l1]:
-                #        for c2,_ in layer_topk[l2]:
-                #            n1 = f"{l1}_ch{c1}"
-                #            n2 = f"{l2}_ch{c2}"
 
-                #            base_tgt = cache[l2][:,c2].mean()
-                #            patched_tgt = self.patch(x, l1, c1)[:,c2].mean()
-                #            eff = (base_tgt - patched_tgt).item()
-
-                #            if abs(eff) > 0.001:
-                #                circuits[cls].add_edge(n1,n2,weight=eff)
                 for l1, l2 in zip(layers[:-1], layers[1:]):
                     for c1,_ in layer_topk[l1]:
                         patched_out, patched_cache = self.patch_and_run(x, l1, c1)
